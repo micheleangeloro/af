@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acronym Foundation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #f0f0f0;
+      color: #0f0f0f;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    .logo {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      height: 200px;
+      width: auto;
+    }
+
+    nav {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 32px;
+    }
+
+    nav a {
+      color: #0f0f0f;
+      text-decoration: none;
+      font-size: 16px;
+      letter-spacing: 0.05em;
+    }
+
+    nav a:hover {
+      opacity: 0.6;
+    }
+
+    .circle {
+      position: absolute;
+      right: 0;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: #0f0f0f;
+      cursor: pointer;
+      will-change: transform;
+    }
+
+    @media (max-width: 768px) {
+      .logo {
+        height: 100px;
+      }
+
+      .circle {
+        width: 100px;
+        height: 100px;
+      }
+
+      nav {
+        left: 20px;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <img src="Asset/af-logo.svg" alt="Acronym Foundation" class="logo">
+
+  <nav>
+    <a href="#">Amp</a>
+    <a href="#">Anvil</a>
+    <a href="#">Contact</a>
+  </nav>
+
+  <div class="circle" id="circle"></div>
+
+  <script>
+    const circle = document.getElementById('circle');
+    const gravity = 2400;
+    const restitution = 0.5;
+    const threshold = 2;
+
+    let y, velocity, floor, animId, size;
+
+    function getSize() {
+      return circle.offsetHeight;
+    }
+
+    function initBounce() {
+      cancelAnimationFrame(animId);
+      size = getSize();
+      floor = window.innerHeight - size;
+      y = -size;
+      velocity = 0;
+      circle.style.top = y + 'px';
+      let last = performance.now();
+
+      function step(now) {
+        const dt = Math.min((now - last) / 1000, 0.03);
+        last = now;
+
+        velocity += gravity * dt;
+        y += velocity * dt;
+
+        if (y >= floor) {
+          y = floor;
+          velocity = -velocity * restitution;
+          if (Math.abs(velocity) < threshold) {
+            y = floor;
+            circle.style.top = y + 'px';
+            return;
+          }
+        }
+
+        circle.style.top = y + 'px';
+        animId = requestAnimationFrame(step);
+      }
+
+      animId = requestAnimationFrame(step);
+    }
+
+    initBounce();
+
+    circle.addEventListener('click', () => {
+      cancelAnimationFrame(animId);
+      let fallVel = 0;
+      let fallY = y;
+      let last = performance.now();
+
+      function fallDown(now) {
+        const dt = Math.min((now - last) / 1000, 0.03);
+        last = now;
+        fallVel += gravity * dt;
+        fallY += fallVel * dt;
+        circle.style.top = fallY + 'px';
+
+        if (fallY > window.innerHeight) {
+          initBounce();
+        } else {
+          requestAnimationFrame(fallDown);
+        }
+      }
+
+      requestAnimationFrame(fallDown);
+    });
+  </script>
+</body>
+</html>
