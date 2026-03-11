@@ -134,9 +134,7 @@
       animId = requestAnimationFrame(step);
     }
 
-    initBounce();
-
-    circle.addEventListener('click', () => {
+    function fallThenBounce() {
       cancelAnimationFrame(animId);
       let fallVel = 0;
       let fallY = y;
@@ -157,6 +155,19 @@
       }
 
       requestAnimationFrame(fallDown);
+    }
+
+    initBounce();
+
+    circle.addEventListener('click', fallThenBounce);
+
+    let lastSize = getSize();
+    window.addEventListener('resize', () => {
+      const newSize = getSize();
+      if (newSize !== lastSize) {
+        lastSize = newSize;
+        fallThenBounce();
+      }
     });
   </script>
 </body>
