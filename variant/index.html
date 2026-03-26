@@ -75,11 +75,12 @@
       position: absolute;
       bottom: 24px;
       left: 24px;
+      display: flex;
+      gap: 24px;
     }
 
-    nav.contact-nav a {
-      animation-delay: 0.5s;
-    }
+    nav.contact-nav a:nth-child(1) { animation-delay: 0.5s; }
+    nav.contact-nav a:nth-child(2) { animation-delay: 0.7s; }
 
     .circle {
       position: absolute;
@@ -123,6 +124,7 @@
   </nav>
 
   <nav class="contact-nav">
+    <a href="https://www.youtube.com" target="_blank" rel="noopener">YouTube</a>
     <a href="#">Contact</a>
   </nav>
 
